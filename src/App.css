@@ -1,38 +1,824 @@
-.App {
-  text-align: center;
+
+:root{
+  /* Color Palette - Refined Corporate */
+  --bg-primary: #0A0E1A;
+  --bg-secondary: #0F1419;
+  --bg-elevated: #151922;
+  
+  --text-primary: rgba(255,255,255,0.95);
+  --text-secondary: rgba(255,255,255,0.75);
+  --text-muted: rgba(255,255,255,0.55);
+  
+  --accent-blue: #0078D4;      /* Microsoft Blue */
+  --accent-cyan: #00B7C3;      /* Fluent Cyan */
+  --accent-teal: #00C9B3;      /* Modern Teal */
+  --accent-purple: #8B5CF6;    /* Premium Purple */
+  
+  --surface-glass: rgba(255,255,255,0.04);
+  --surface-glass-hover: rgba(255,255,255,0.08);
+  --surface-border: rgba(255,255,255,0.08);
+  --surface-border-hover: rgba(255,255,255,0.18);
+  
+  /* Elevation Shadows - Microsoft Fluent */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.25);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.35);
+  --shadow-xl: 0 16px 64px rgba(0,0,0,0.45);
+  
+  /* Spacing & Typography */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --max-width: 1280px;
+  
+  /* Animation Timing */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --transition-base: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-.App-logo {
-  height: 40vmin;
+/* =======================
+   BASE RESETS
+======================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: 
+    radial-gradient(ellipse 1600px 800px at 10% 0%, rgba(0,120,212,0.08), transparent),
+    radial-gradient(ellipse 1400px 700px at 90% 0%, rgba(139,92,246,0.06), transparent),
+    radial-gradient(ellipse 1200px 900px at 50% 100%, rgba(0,183,195,0.05), transparent),
+    linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  background-attachment: fixed;
+  
+  color: var(--text-primary);
+  font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Premium Animated Background Mesh */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle 500px at 20% 30%, rgba(0,120,212,0.15), transparent),
+    radial-gradient(circle 600px at 80% 20%, rgba(139,92,246,0.12), transparent),
+    radial-gradient(circle 550px at 50% 80%, rgba(0,183,195,0.10), transparent);
+  animation: mesh-flow 25s ease-in-out infinite;
+  z-index: -1;
+  opacity: 0.7;
+  filter: blur(60px);
+}
+
+@keyframes mesh-flow {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -40px) rotate(5deg); }
+  66% { transform: translate(-20px, 30px) rotate(-3deg); }
+}
+
+/* Subtle Grid Pattern (Microsoft Fluent) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 20%, transparent 70%);
   pointer-events: none;
+  z-index: -1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* =======================
+   NAVIGATION BAR - Acrylic Material
+======================= */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  
+  background: rgba(15,20,30,0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  
+  border-bottom: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-md);
+  
+  transition: all var(--transition-base);
 }
 
-.App-header {
-  background-color: #282c34;
+nav.scrolled {
+  padding: 12px 48px;
+  background: rgba(10,14,26,0.85);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Navigation Brand with Profile */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  transition: transform var(--transition-fast);
+}
+
+.nav-brand:hover {
+  transform: translateX(4px);
+}
+
+.nav-photo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0,183,195,0.4);
+  transition: all var(--transition-base);
+}
+
+.nav-photo:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 30px rgba(0,120,212,0.5);
+  transform: scale(1.05);
+}
+
+.nav-brand-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+/* Navigation Links */
+nav a:not(.nav-brand) {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  margin: 0 16px;
+  padding: 8px 0;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+nav a:not(.nav-brand)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  transition: width var(--transition-base);
+}
+
+nav a:not(.nav-brand):hover {
+  color: var(--text-primary);
+}
+
+nav a:not(.nav-brand):hover::after {
+  width: 100%;
+}
+
+/* Scroll Margin Fix */
+section {
+  scroll-margin-top: 100px;
+}
+
+/* =======================
+   HERO SECTION - Executive Presence
+======================= */
+.hero {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  padding: 140px 32px 80px;
+  position: relative;
+  text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
+/* Hero Gradient Overlay */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 1000px 600px at 50% 20%, rgba(0,120,212,0.15), transparent 70%),
+    radial-gradient(ellipse 900px 500px at 30% 80%, rgba(0,183,195,0.08), transparent 60%);
+  z-index: -1;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Profile Image - Premium Treatment */
+.hero img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255,255,255,0.15);
+  box-shadow: 
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 80px rgba(0,120,212,0.2);
+  
+  transition: all var(--transition-slow);
+  position: relative;
+}
+
+.hero img::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.hero img:hover {
+  transform: translateY(-8px) scale(1.04);
+  border-color: rgba(255,255,255,0.3);
+  box-shadow: 
+    0 30px 90px rgba(0,0,0,0.6),
+    0 0 120px rgba(0,120,212,0.4);
+}
+
+/* Typography - Executive Style */
+.hero h1 {
+  margin: 24px 0 12px;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 600;
+  letter-spacing: -1.2px;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.85) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero .subtitle {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 400;
+  color: var(--accent-cyan);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.hero p {
+  margin: 16px auto 0;
+  max-width: 680px;
+  color: var(--text-secondary);
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.7;
+}
+
+/* =======================
+   BUTTONS - Microsoft Fluent Design
+======================= */
+.btn-group {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primary, .secondary {
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+  font-family: inherit;
+}
+
+/* Primary Button - Gradient Shine */
+.primary {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+  box-shadow: 
+    0 8px 24px rgba(0,120,212,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.primary::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255,255,255,0.3) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  opacity: 0;
+}
+
+.primary:hover::before {
+  left: 100%;
+  opacity: 1;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 32px rgba(0,120,212,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button - Acrylic Glass */
+.secondary {
+  color: var(--text-primary);
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+
+.secondary:hover {
+  background: var(--surface-glass-hover);
+  border-color: var(--surface-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* =======================
+   SECTIONS - Consistent Spacing
+======================= */
+section {
+  padding: 100px 32px;
+  position: relative;
+}
+
+section > * {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section h2 {
+  font-size: clamp(32px, 4vw, 42px);
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+section > p {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: clamp(15px, 1.5vw, 17px);
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+
+/* =======================
+   CARDS - Fluent Acrylic Design
+======================= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 24px 0;
+}
+
+.card {
+  padding: 32px 28px;
+  text-align: left;
+  
+  background: linear-gradient(135deg, var(--surface-glass) 0%, rgba(255,255,255,0.02) 100%);
+  backdrop-filter: blur(20px);
+  
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+/* Card Hover Spotlight Effect */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(0,120,212,0.15) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0,120,212,0.4);
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 40px rgba(0,120,212,0.15);
+}
+
+/* Card Icon/Emoji */
+.card-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.card h3 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+
+.card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* =======================
+   CERTIFICATE CARDS - Logo Grid
+======================= */
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px 0;
+}
+
+.cert-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px;
+  
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.cert-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,120,212,0.1), rgba(0,183,195,0.1));
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.cert-card:hover::after {
+  opacity: 1;
+}
+
+.cert-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(0,183,195,0.5);
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 60px rgba(0,183,195,0.2);
+}
+
+.cert-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  transition: transform var(--transition-base);
+}
+
+.cert-card:hover .cert-logo {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.cert-card h3 {
+  margin: 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cert-card p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* =======================
+   LISTS - Clean Minimal Style
+======================= */
+.list p {
+  width: min(800px, 100%);
+  margin: 12px auto;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-sm);
+  
+  color: var(--text-secondary);
+  font-size: 15px;
+  transition: all var(--transition-fast);
+}
+
+.list p:hover {
+  background: var(--surface-glass-hover);
+  border-color: var(--surface-border-hover);
+  transform: translateX(8px);
+}
+
+/* =======================
+   CONTACT SECTION - Modern Forms
+======================= */
+.contact-info {
+  margin-bottom: 40px;
+}
+
+.contact-info p {
+  width: min(600px, 100%);
+  margin: 12px auto;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  
+  background: var(--surface-glass);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-sm);
+  
+  font-size: 15px;
+  transition: all var(--transition-fast);
+}
+
+.contact-info p:hover {
+  background: var(--surface-glass-hover);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0,183,195,0.15);
+}
+
+.contact-info a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.contact-info a:hover {
+  color: var(--accent-blue);
+  text-decoration: underline;
+}
+
+/* Form Inputs */
+input, textarea {
+  width: min(800px, 100%);
+  margin: 12px auto;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(10px);
+  
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  
+  transition: all var(--transition-base);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+input:focus, textarea:focus {
+  border-color: var(--accent-blue);
+  background: var(--surface-glass-hover);
+  box-shadow: 
+    0 0 0 4px rgba(0,120,212,0.1),
+    0 8px 24px rgba(0,0,0,0.2);
+}
+
+textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* =======================
+   FOOTER - Minimal Elegant
+======================= */
+footer {
+  padding: 32px;
+  text-align: center;
+  
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid var(--surface-border);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
+  
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+footer p {
+  margin: 8px 0;
+}
+
+footer a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+footer a:hover {
+  color: var(--accent-blue);
+}
+
+/* =======================
+   RESPONSIVE DESIGN
+======================= */
+@media (max-width: 1024px) {
+  :root {
+    --max-width: 960px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  nav {
+    padding: 16px 32px;
   }
+  
+  section {
+    padding: 80px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 24px;
+  }
+  
+  nav a:not(.nav-brand) {
+    margin: 0 10px;
+    font-size: 14px;
+  }
+  
+  .hero {
+    padding: 120px 20px 60px;
+  }
+  
+  .hero img {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .primary, .secondary {
+    width: 100%;
+    max-width: 320px;
+  }
+  
+  .cards, .cert-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  section {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand-text {
+    display: none;
+  }
+  
+  .hero h1 {
+    font-size: 32px;
+  }
+  
+  .hero .subtitle {
+    font-size: 16px;
+  }
+  
+  section h2 {
+    font-size: 28px;
+  }
+}
+
+/* =======================
+   UTILITY CLASSES
+======================= */
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(0,183,195,0.5);
+}
+
+/* Smooth Animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(0,120,212,0.3);
+  color: var(--text-primary);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
 }
